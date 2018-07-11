@@ -17,7 +17,7 @@ path_parent = "%s/../" % path_cur
 sys.path.append(path_parent)
 from database import MYDB
 
-es_url = 'http://elastic:Br2S4mHWcE3l@10.89.189.48:8021'
+es_url = '***********'
 
 def ts2date(ts):
     return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(ts))
