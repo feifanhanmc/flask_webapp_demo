@@ -4,9 +4,14 @@ from flask import Blueprint, url_for, render_template, request,\
 import json
 
 
-mod = Blueprint('index', __name__, url_prefix='/index')
+mod = Blueprint('index', __name__, url_prefix='/')
 
 
 @mod.route('/')
 def index():
-    return 'Hello, world!'
+    return render_template('index.html')
+
+@mod.route('/huaji')
+def huaji():
+    return render_template('huaji.html')
+

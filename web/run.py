@@ -7,7 +7,7 @@ app = create_app()
 
 @app.route('/')
 def hello_world():
-    return redirect('/index')
+    return redirect('/')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=80, debug=False)
