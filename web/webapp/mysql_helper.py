@@ -2,15 +2,22 @@
 import MySQLdb
 from config import mysql_config
 
+mysql_config_defalut = {
+    'host': 'localhost',
+    'port': 3306,
+    'username': 'root',
+    'password': 'root',
+    'dbname': 'mysql'
+}
 
-class MYDB():
-    def __init__(self):
+class mysql_db():
+    def __init__(self, mysql_config=mysql_config_defalut):
         self.conn = MySQLdb.connect(
-                host='localhost',
-                port=3306,
-                user=mysql_config['user'],
-                passwd=mysql_config['pwd'],
-                db=mysql_config['db'],
+                host=mysql_config['host'],
+                port=mysql_config['port'],
+                user=mysql_config['username'],
+                passwd=mysql_config['password'],
+                db=mysql_config['dbname'],
                 charset='utf8')
         self.cursor = self.conn.cursor()
 
@@ -21,13 +28,14 @@ class MYDB():
         self.cursor.execute(sql)
         self.close()
 
-    def select(self, sql):
+    def select(self, sql, auto_close=True):
         self.cursor.execute(sql)
         res = self.cursor.fetchall()
-        self.close()
+        if auto_close:
+            self.close()
         return res
 
-    def insert(self, table_name, data_headers, data):
+    def insert(self, table_name, data_headers, data, auto_close=True, debug_mode=True):
         '''
         :param data_headers(list of data_name(str)) 、 data(list of list)
         for example:
@@ -36,6 +44,9 @@ class MYDB():
                     ['admin', 'admin'],
                     ['root', 'root']] 
         '''
+        flag = False
+        debug_info = ''
+
         columc_num = len(data_headers)
         
         #拼接sqli语句
@@ -52,7 +63,6 @@ class MYDB():
         sqli = sqli + ')' + ' VALUES ' + datatype
         
         #存储数据
-        flag = True
         for d in data:
             t = []
             for i in range(columc_num):
@@ -60,11 +70,15 @@ class MYDB():
             try:
                 self.cursor.execute(sqli, tuple(t))
                 self.conn.commit()
+                flag = True
+                debug_info += '存储成功，共存储 %s 条数据' % str(len(data))
             except Exception,e :
-                # print '存储失败，错误原因 :', e
-                flag = False
+                debug_info += '存储失败，错误原因 : %s' % e
                 self.conn.rollback()
-        if flag:
-            if len(data):
-                print '存储成功，共存储' + str(len(data)) + '条数据'
-        self.close()
+                break 
+        # 
+        if debug_mode:
+            print debug_info
+        if auto_close:
+            self.close()
+        return flag
