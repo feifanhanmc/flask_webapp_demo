@@ -15,7 +15,7 @@ import sys
 path_cur = os.path.dirname(os.path.realpath(__file__))
 path_parent = "%s/../" % path_cur
 sys.path.append(path_parent)
-from database import MYDB
+from mysql_helper import mysql_db
 
 es_url = '***********'
 
@@ -62,7 +62,7 @@ def write_file(columns, rows, filename, writemode="wb"):
         writer.writerows(rows)
 
 def save_data2mysql(columns, rows):
-    db = MYDB()
+    db = mysql_db()
     db.insert(table_name='risk_user', data_headers=columns, data=rows)
 
 # def show_fig(rows=None, filepath=None):

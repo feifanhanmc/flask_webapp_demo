@@ -1,5 +1,5 @@
 #-*- coding:utf-8 -*-
-from webapp.database import MYDB
+from webapp.mysql_helper import mysql_db
 
 def utils_create_table(sql):
     sql = '''CREATE TABLE IF NOT EXISTS risk_user(
@@ -10,7 +10,7 @@ def utils_create_table(sql):
                        endtime TIMESTAMP NOT NULL,
                        PRIMARY KEY ( url, username )
             )ENGINE=InnoDB DEFAULT CHARSET=utf8;'''
-    db = MYDB()
+    db = mysql_db()
     try:
         db.create_table(sql)
         return True
@@ -20,7 +20,7 @@ def utils_create_table(sql):
 
 def utils_show_urls():
     sql = '''select distinct url from risk_user'''
-    db = MYDB()
+    db = mysql_db()
     try:
         return db.select(sql)
     except Exception,e:
@@ -29,7 +29,7 @@ def utils_show_urls():
 
 def utils_show_risk_user(url):
     sql = "select username,count,starttime,endtime from risk_user where url = %s order by count desc" % (url)
-    db = MYDB()
+    db = mysql_db()
     try:
         res = [[r[0], r[1], str(r[2]), str(r[3])] for r in db.select(sql)]
         return res
