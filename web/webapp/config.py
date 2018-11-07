@@ -1,7 +1,9 @@
 #-*- coding: utf-8 -*-
 
 mysql_config = {
-    'user': 'root',
-    'pwd': 'root',
-    'db': 'web',
+    'host': 'localhost',
+    'port': 3306,
+    'username': 'root',
+    'password': 'root',
+    'dbname': 'mysql'
 }
